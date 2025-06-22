@@ -65,13 +65,22 @@ namespace ECommerceApp.Data
                 .HasOne(ci => ci.User)
                 .WithMany(u => u.CartItems)
                 .HasForeignKey(ci => ci.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<CartItem>()
+                .OnDelete(DeleteBehavior.Cascade);            modelBuilder.Entity<CartItem>()
                 .HasOne(ci => ci.Product)
                 .WithMany(p => p.CartItems)
                 .HasForeignKey(ci => ci.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure indexes for better performance
+            modelBuilder.Entity<Product>()
+                .HasIndex(p => p.Name);
+                
+            modelBuilder.Entity<Product>()
+                .HasIndex(p => p.CategoryId);
+                
+            modelBuilder.Entity<Category>()
+                .HasIndex(c => c.Name)
+                .IsUnique();
         }
     }
 }
