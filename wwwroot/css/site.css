@@ -1,0 +1,98 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
+
+/* Custom styles for e-commerce */
+.product-card {
+    transition: transform 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.cart-icon {
+    position: relative;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+}
+
+.product-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+.price {
+    font-weight: bold;
+    color: #28a745;
+    font-size: 1.2rem;
+}
+
+.btn-add-to-cart {
+    width: 100%;
+}
+
+.admin-sidebar {
+    background-color: #343a40;
+    min-height: calc(100vh - 56px);
+}
+
+.admin-sidebar .nav-link {
+    color: #fff;
+}
+
+.admin-sidebar .nav-link:hover {
+    background-color: #495057;
+}
+
+.dashboard-card {
+    border-left: 4px solid #007bff;
+}
+
+.dashboard-card.success {
+    border-left-color: #28a745;
+}
+
+.dashboard-card.warning {
+    border-left-color: #ffc107;
+}
+
+.dashboard-card.danger {
+    border-left-color: #dc3545;
+}
