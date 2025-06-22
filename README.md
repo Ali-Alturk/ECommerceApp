@@ -1,7 +1,7 @@
 # E-Commerce Web Application
 
 ## Overview
-This is a complete ASP.NET Core MVC e-commerce web application built with the following architecture:
+This ECommerceApp was built using .NET Entity Framework with MVC pattern. This is a complete ASP.NET Core MVC e-commerce web application built with the following architecture:
 
 ## Project Structure
 
