@@ -1,0 +1,161 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+    <div class="container">
+        <!-- Brand with icon -->
+        <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+            <i class="fas fa-store me-2"></i>
+            <strong>E-Store</strong>
+        </a>
+        
+        <!-- Mobile toggle button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Navigation Links -->
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-home me-1"></i>Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Product" asp-action="Index">
+                        <i class="fas fa-box me-1"></i>Products
+                    </a>
+                </li>                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-list me-1"></i>Categories
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                        @try
+                        {
+                            @await Component.InvokeAsync("CategoryMenu")
+                        }
+                        catch
+                        {
+                            <li><a class="dropdown-item" asp-controller="Product" asp-action="Index">View All Products</a></li>
+                        }
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="About">
+                        <i class="fas fa-info-circle me-1"></i>About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Contact">
+                        <i class="fas fa-envelope me-1"></i>Contact
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Search Form -->
+            <div class="d-flex me-3 search-container">
+                <div class="input-group">
+                    <input class="form-control search-input" type="search" id="search-input" placeholder="Search products..." aria-label="Search">
+                    <button class="btn btn-search" type="button" onclick="searchProducts()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>            
+            <!-- User Menu -->
+            <ul class="navbar-nav">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <!-- Shopping Cart -->
+                    <li class="nav-item">
+                        <a class="nav-link position-relative cart-link" asp-controller="Cart" asp-action="Index">
+                            <i class="fas fa-shopping-cart fa-lg"></i> 
+                            <span class="d-none d-lg-inline ms-1">Cart</span>
+                            @try
+                            {
+                                @await Component.InvokeAsync("ShoppingCartSummary")
+                            }
+                            catch
+                            {
+                                <span class="badge bg-secondary position-absolute top-0 start-100 translate-middle rounded-pill">0</span>
+                            }
+                        </a>
+                    </li>
+                    
+                    <!-- User Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle user-dropdown" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle fa-lg me-1"></i>
+                            <span class="d-none d-lg-inline">@(User.Identity?.Name ?? "User")</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                                        <i class="fas fa-cog me-2"></i>Admin Panel
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                            }
+                            <li>
+                                <a class="dropdown-item" asp-area="User" asp-controller="Profile" asp-action="Index">
+                                    <i class="fas fa-user me-2"></i>My Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-area="User" asp-controller="Order" asp-action="Index">
+                                    <i class="fas fa-shopping-bag me-2"></i>My Orders
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link login-btn" asp-controller="Account" asp-action="Login">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link register-btn" asp-controller="Account" asp-action="Register">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    function searchProducts() {
+        const searchTerm = document.getElementById('search-input').value;
+        if (searchTerm.trim()) {
+            window.location.href = '/Product?search=' + encodeURIComponent(searchTerm);
+        }
+    }
+
+    // Allow Enter key in search box
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchProducts();
+                }
+            });
+        }
+    });
+</script>

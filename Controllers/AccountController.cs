@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using ECommerceApp.Models;
+using ECommerceApp.ViewModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace ECommerceApp.Controllers

@@ -1,0 +1,158 @@
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+@model ProductListViewModel
+
+<div class="container py-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="category-menu">
+                <h5>Categories</h5>                <div class="list-group">
+                    <a href="@Url.Action("Index", "Product")" 
+                       class="list-group-item @(Model.SelectedCategoryId == null ? "active" : "")">
+                        All Products
+                    </a>
+                    @if (Model.Categories != null)
+                    {
+                        @foreach (var category in Model.Categories)
+                        {
+                            <a href="@Url.Action("Index", "Product", new { categoryId = category.Id })" 
+                               class="list-group-item @(Model.SelectedCategoryId == category.Id ? "active" : "")">
+                                @category.Name
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+              <!-- Price Filter -->
+            <div class="category-menu">
+                <h5>Price Range</h5>
+                <form asp-action="Index" method="get">
+                    <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId" />
+                    <input type="hidden" name="searchTerm" value="@Model.SearchTerm" />
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Min Price</label>
+                        <input type="number" class="form-control" name="minPrice" step="0.01" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Max Price</label>
+                        <input type="number" class="form-control" name="maxPrice" step="0.01" />
+                    </div>
+                    <button type="submit" class="btn btn-primary-custom btn-sm w-100">Apply Filter</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-lg-9">            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2>Products</h2>
+                    @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                    {
+                        <p class="text-muted">Search results for "@Model.SearchTerm"</p>
+                    }
+                    @if (Model.SelectedCategoryId.HasValue && Model.Categories != null)
+                    {
+                        var selectedCategory = Model.Categories.FirstOrDefault(c => c.Id == Model.SelectedCategoryId.Value);
+                        if (selectedCategory != null)
+                        {
+                            <p class="text-muted">Category: @selectedCategory.Name</p>
+                        }
+                    }
+                </div>
+                <div>
+                    <span class="text-muted">@Model.TotalCount product(s) found</span>
+                </div>
+            </div>
+            
+            <!-- Search and Sort -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <form asp-action="Index" method="get" class="d-flex">
+                        <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId" />
+                        <input type="text" class="form-control me-2" name="searchTerm" placeholder="Search products..." value="@Model.SearchTerm" />
+                        <button type="submit" class="btn btn-outline-primary">Search</button>
+                    </form>
+                </div>                <div class="col-md-4">
+                    <form asp-action="Index" method="get">
+                        <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId" />
+                        <input type="hidden" name="searchTerm" value="@Model.SearchTerm" />
+                        <select class="form-select" name="sortBy" onchange="this.form.submit()">
+                            <option value="">Sort by...</option>
+                            <option value="name" selected="@(Model.SortBy == "name")">Name</option>
+                            <option value="price" selected="@(Model.SortBy == "price")">Price</option>
+                            <option value="date" selected="@(Model.SortBy == "date")">Date</option>
+                        </select>
+                        <input type="hidden" name="sortOrder" value="@Model.SortOrder" />
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="row">
+                @if (Model.Products.Any())
+                {
+                    @foreach (var product in Model.Products)
+                    {
+                        @await Html.PartialAsync("_ProductCard", product)
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h4>No products found</h4>
+                        <p class="text-muted">Try adjusting your search criteria or browse all products.</p>
+                        <a asp-action="Index" class="btn btn-primary-custom">View All Products</a>
+                    </div>
+                }
+            </div>
+            
+            <!-- Pagination -->
+            @if (Model.TotalPages > 1)
+            {
+                <nav aria-label="Product pagination" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        @if (Model.CurrentPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" 
+                                   asp-route-page="@(Model.CurrentPage - 1)"
+                                   asp-route-categoryId="@ViewBag.SelectedCategory"
+                                   asp-route-search="@ViewBag.SearchTerm"
+                                   asp-route-sortOrder="@ViewBag.SortOrder">Previous</a>
+                            </li>
+                        }
+                        
+                        @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" asp-action="Index" 
+                                   asp-route-page="@i"
+                                   asp-route-categoryId="@ViewBag.SelectedCategory"
+                                   asp-route-search="@ViewBag.SearchTerm"
+                                   asp-route-sortOrder="@ViewBag.SortOrder">@i</a>
+                            </li>
+                        }
+                        
+                        @if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" 
+                                   asp-route-page="@(Model.CurrentPage + 1)"
+                                   asp-route-categoryId="@ViewBag.SelectedCategory"
+                                   asp-route-search="@ViewBag.SearchTerm"
+                                   asp-route-sortOrder="@ViewBag.SortOrder">Next</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        </div>
+    </div>
+</div>

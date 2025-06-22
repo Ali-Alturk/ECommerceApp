@@ -13,6 +13,7 @@ namespace ECommerceApp.ViewModels
         public int PageSize { get; set; } = 12;
         public string SortBy { get; set; } = "name";
         public string SortOrder { get; set; } = "asc";
+        public int TotalCount => Products.Count(); // Total count of products shown
         
         public bool HasPreviousPage => CurrentPage > 1;
         public bool HasNextPage => CurrentPage < TotalPages;

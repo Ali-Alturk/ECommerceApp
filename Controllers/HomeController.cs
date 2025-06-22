@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ECommerceApp.Models;
+using ECommerceApp.Data;
+using ECommerceApp.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ECommerceApp.Controllers
@@ -7,16 +10,27 @@ namespace ECommerceApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
-        }
-
-        public IActionResult Index()
+            _context = context;
+        }        public async Task<IActionResult> Index()
         {
-            // TODO: Load featured products from database
-            return View();
+            // Load featured products from database
+            var featuredProducts = await _context.Products
+                .Where(p => p.IsActive && p.IsFeatured)
+                .Include(p => p.Category)
+                .Take(8)
+                .ToListAsync();
+
+            var viewModel = new ProductListViewModel
+            {
+                Products = featuredProducts
+            };
+
+            return View(viewModel);
         }
 
         public IActionResult About()
@@ -27,18 +41,23 @@ namespace ECommerceApp.Controllers
         public IActionResult Contact()
         {
             return View();
-        }
-
-        [HttpPost]
-        public IActionResult Contact(string name, string email, string message)
+        }        [HttpPost]
+        public IActionResult Contact(string name, string email, string subject, string message)
         {
-            // TODO: Handle contact form submission
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(message))
             {
-                // Process contact form
-                TempData["Message"] = "Thank you for your message. We will get back to you soon!";
+                // TODO: Here you could send an email, save to database, etc.
+                // For now, we'll just show a success message
+                TempData["Message"] = $"Thank you {name}! Your message has been received. We will get back to you at {email} soon.";
                 return RedirectToAction(nameof(Contact));
             }
+            
+            if (string.IsNullOrEmpty(name))
+                ModelState.AddModelError("name", "Name is required");
+            if (string.IsNullOrEmpty(email))
+                ModelState.AddModelError("email", "Email is required");
+            if (string.IsNullOrEmpty(message))
+                ModelState.AddModelError("message", "Message is required");
             
             return View();
         }

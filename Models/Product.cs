@@ -21,8 +21,9 @@ namespace ECommerceApp.Models
         public int Stock { get; set; }
         
         public string ImageUrl { get; set; } = string.Empty;
+          public bool IsActive { get; set; } = true;
         
-        public bool IsActive { get; set; } = true;
+        public bool IsFeatured { get; set; } = false;
         
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         

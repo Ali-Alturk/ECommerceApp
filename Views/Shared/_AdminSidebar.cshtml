@@ -1,0 +1,85 @@
+<div class="nav flex-column">
+    <div class="text-center mb-4">
+        <i class="fas fa-tachometer-alt fa-2x text-secondary-custom"></i>
+        <h6 class="mt-2">Admin Dashboard</h6>
+    </div>
+    
+    <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")" 
+       asp-area="Admin" asp-controller="Home" asp-action="Index">
+        <i class="fas fa-home"></i> Dashboard
+    </a>
+    
+    <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Product" ? "active" : "")" 
+       asp-area="Admin" asp-controller="Product" asp-action="Index">
+        <i class="fas fa-box"></i> Products
+    </a>
+    
+    <a class="nav-link" href="#" onclick="toggleSubmenu('categorySubmenu')">
+        <i class="fas fa-tags"></i> Categories
+        <i class="fas fa-chevron-down float-end"></i>
+    </a>
+    <div id="categorySubmenu" class="submenu">
+        <a class="nav-link ps-4" href="#">
+            <i class="fas fa-list"></i> All Categories
+        </a>
+        <a class="nav-link ps-4" href="#">
+            <i class="fas fa-plus"></i> Add Category
+        </a>
+    </div>
+    
+    <a class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Order" ? "active" : "")" 
+       asp-area="Admin" asp-controller="Order" asp-action="Index">
+        <i class="fas fa-shopping-cart"></i> Orders
+    </a>
+    
+    <a class="nav-link" href="#">
+        <i class="fas fa-users"></i> Customers
+    </a>
+    
+    <a class="nav-link" href="#" onclick="toggleSubmenu('reportsSubmenu')">
+        <i class="fas fa-chart-bar"></i> Reports
+        <i class="fas fa-chevron-down float-end"></i>
+    </a>
+    <div id="reportsSubmenu" class="submenu">
+        <a class="nav-link ps-4" href="#">
+            <i class="fas fa-dollar-sign"></i> Sales Report
+        </a>
+        <a class="nav-link ps-4" href="#">
+            <i class="fas fa-chart-line"></i> Analytics
+        </a>
+        <a class="nav-link ps-4" href="#">
+            <i class="fas fa-inventory"></i> Inventory
+        </a>
+    </div>
+    
+    <a class="nav-link" href="#">
+        <i class="fas fa-cog"></i> Settings
+    </a>
+    
+    <hr class="my-3">
+    
+    <a class="nav-link" asp-controller="Home" asp-action="Index" asp-area="">
+        <i class="fas fa-external-link-alt"></i> View Store
+    </a>
+</div>
+
+<style>
+.submenu {
+    display: none;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 5px;
+    margin: 0.5rem 0;
+    padding: 0.5rem 0;
+}
+
+.submenu.show {
+    display: block;
+}
+</style>
+
+<script>
+function toggleSubmenu(submenuId) {
+    var submenu = document.getElementById(submenuId);
+    submenu.classList.toggle('show');
+}
+</script>

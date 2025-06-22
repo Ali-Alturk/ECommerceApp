@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - E-Commerce Store</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico">
+    
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    @try
+    {
+        @await Html.PartialAsync("_Header")
+    }
+    catch (Exception)
+    {
+        <!-- Fallback header if component fails -->
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-store me-2"></i><strong>E-Store</strong>
+                </a>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Product" asp-action="Index">Products</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    }
+    
+    <main role="main">
+        <!-- Display any error messages -->
+        @if (TempData["Message"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Message"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        }
+        
+        @RenderBody()
+    </main>
+    
+    @try
+    {
+        @await Html.PartialAsync("_Footer")
+    }
+    catch (Exception)
+    {
+        <!-- Fallback footer if component fails -->
+        <footer class="footer-custom">
+            <div class="container py-4">
+                <div class="text-center">
+                    <p>&copy; @DateTime.Now.Year E-Store. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    }    
+    <!-- Anti-forgery token for AJAX requests -->
+    @Html.AntiForgeryToken()
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>      <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/header.js"></script>
+    <script src="~/js/footer.js"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+    
+    <script>
+        // Global error handler to prevent unhandled errors from showing
+        window.addEventListener('error', function(event) {
+            console.error('Error caught:', event.error);
+            // Prevent the error from showing in the UI
+            event.preventDefault();
+            return false;
+        });
+        
+        // Remove any error messages after page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide any development error messages
+            const errorElements = document.querySelectorAll('[data-development-error]');
+            errorElements.forEach(el => el.style.display = 'none');
+            
+            // Initialize tooltips if Bootstrap is loaded
+            if (typeof bootstrap !== 'undefined') {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

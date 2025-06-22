@@ -1,0 +1,153 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+@section Header {
+    <div class="bg-info text-white py-4 mb-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-6 mb-0">
+                        <i class="fas fa-user-circle"></i> My Profile
+                    </h1>
+                    <p class="lead mb-0">Manage your account information</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-user"></i> Account Menu</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="#profile-info" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-user-edit"></i> Profile Information
+                    </a>
+                    <a asp-controller="Order" asp-action="Index" class="list-group-item list-group-item-action">
+                        <i class="fas fa-shopping-bag"></i> Order History
+                    </a>
+                    <a asp-controller="Account" asp-action="ChangePassword" class="list-group-item list-group-item-action">
+                        <i class="fas fa-key"></i> Change Password
+                    </a>
+                    <a asp-controller="Account" asp-action="Logout" class="list-group-item list-group-item-action text-danger">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-edit"></i> Profile Information
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Profile" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="FirstName" class="form-label">
+                                        <i class="fas fa-user"></i> @Html.DisplayNameFor(m => m.FirstName)
+                                    </label>
+                                    <input asp-for="FirstName" class="form-control" />
+                                    <span asp-validation-for="FirstName" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="LastName" class="form-label">
+                                        <i class="fas fa-user"></i> @Html.DisplayNameFor(m => m.LastName)
+                                    </label>
+                                    <input asp-for="LastName" class="form-control" />
+                                    <span asp-validation-for="LastName" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label">
+                                        <i class="fas fa-envelope"></i> @Html.DisplayNameFor(m => m.Email)
+                                    </label>
+                                    <input asp-for="Email" class="form-control" readonly />
+                                    <div class="form-text">Email cannot be changed. Contact support if needed.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="PhoneNumber" class="form-label">
+                                        <i class="fas fa-phone"></i> @Html.DisplayNameFor(m => m.PhoneNumber)
+                                    </label>
+                                    <input asp-for="PhoneNumber" class="form-control" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4 mb-3"><i class="fas fa-map-marker-alt"></i> Address Information</h5>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label">
+                                <i class="fas fa-home"></i> @Html.DisplayNameFor(m => m.Address)
+                            </label>
+                            <input asp-for="Address" class="form-control" placeholder="Street address" />
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="City" class="form-label">
+                                        <i class="fas fa-city"></i> @Html.DisplayNameFor(m => m.City)
+                                    </label>
+                                    <input asp-for="City" class="form-control" />
+                                    <span asp-validation-for="City" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="PostalCode" class="form-label">
+                                        <i class="fas fa-mail-bulk"></i> @Html.DisplayNameFor(m => m.PostalCode)
+                                    </label>
+                                    <input asp-for="PostalCode" class="form-control" />
+                                    <span asp-validation-for="PostalCode" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="Country" class="form-label">
+                                        <i class="fas fa-globe"></i> @Html.DisplayNameFor(m => m.Country)
+                                    </label>
+                                    <input asp-for="Country" class="form-control" />
+                                    <span asp-validation-for="Country" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-info btn-lg">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

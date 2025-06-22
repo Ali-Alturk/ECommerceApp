@@ -122,8 +122,7 @@ namespace ECommerceApp.Data
                 var sportsCategory = await context.Categories.FirstAsync(c => c.Name == "Sports & Outdoors");
                 
                 var products = new List<Product>
-                {
-                    new Product
+                {                    new Product
                     {
                         Name = "Smartphone Pro Max",
                         Description = "Latest flagship smartphone with advanced features",
@@ -132,6 +131,7 @@ namespace ECommerceApp.Data
                         CategoryId = electronicsCategory.Id,
                         ImageUrl = "/images/smartphone.jpg",
                         IsActive = true,
+                        IsFeatured = true,
                         CreatedDate = DateTime.Now
                     },
                     new Product
@@ -143,6 +143,7 @@ namespace ECommerceApp.Data
                         CategoryId = electronicsCategory.Id,
                         ImageUrl = "/images/headphones.jpg",
                         IsActive = true,
+                        IsFeatured = true,
                         CreatedDate = DateTime.Now
                     },
                     new Product
@@ -154,6 +155,7 @@ namespace ECommerceApp.Data
                         CategoryId = electronicsCategory.Id,
                         ImageUrl = "/images/laptop.jpg",
                         IsActive = true,
+                        IsFeatured = true,
                         CreatedDate = DateTime.Now
                     },
                     new Product

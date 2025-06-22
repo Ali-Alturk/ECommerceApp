@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+      <link rel="stylesheet" href="~/lib/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico">
+    
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    @await Html.PartialAsync("_AdminHeader")
+    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Admin Sidebar -->
+            <nav class="col-md-3 col-lg-2 admin-sidebar">
+                @await Html.PartialAsync("_AdminSidebar")
+            </nav>
+            
+            <!-- Main Content -->
+            <main class="col-md-9 col-lg-10 admin-content">
+                @await RenderSectionAsync("AdminHeader", required: false)
+                
+                <div id="alerts-container"></div>
+                
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div class="loading"></div>
+    </div>
+    
+    <script src="~/js/site.js"></script>
+    <script src="~/js/app.js"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

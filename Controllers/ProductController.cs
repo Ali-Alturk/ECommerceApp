@@ -15,9 +15,7 @@ namespace ECommerceApp.Controllers
         {
             _context = context;
             _logger = logger;
-        }
-
-        // GET: Product
+        }        // GET: Product
         public async Task<IActionResult> Index(int? categoryId, string searchTerm, int page = 1, string sortBy = "name", string sortOrder = "asc")
         {
             var viewModel = new ProductListViewModel
@@ -29,15 +27,44 @@ namespace ECommerceApp.Controllers
                 SortOrder = sortOrder
             };
 
-            // TODO: Load products from database with filtering, searching, and pagination
-            // viewModel.Products = await GetFilteredProducts(categoryId, searchTerm, page, sortBy, sortOrder);
-            // viewModel.Categories = await _context.Categories.Where(c => c.IsActive).ToListAsync();
-            // viewModel.TotalPages = CalculateTotalPages(categoryId, searchTerm, viewModel.PageSize);
+            // Load products from database with filtering, searching, and pagination
+            var query = _context.Products.Include(p => p.Category).Where(p => p.IsActive);
+
+            // Apply category filter
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
+
+            // Apply search filter
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
+            }
+
+            // Apply sorting
+            query = sortBy.ToLower() switch
+            {
+                "price" => sortOrder == "desc" ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
+                "date" => sortOrder == "desc" ? query.OrderByDescending(p => p.CreatedDate) : query.OrderBy(p => p.CreatedDate),
+                _ => sortOrder == "desc" ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name)
+            };
+
+            // Calculate pagination
+            var totalProducts = await query.CountAsync();
+            viewModel.TotalPages = (int)Math.Ceiling((double)totalProducts / viewModel.PageSize);
+
+            // Apply pagination
+            viewModel.Products = await query
+                .Skip((page - 1) * viewModel.PageSize)
+                .Take(viewModel.PageSize)
+                .ToListAsync();
+
+            // Load categories for filter dropdown
+            viewModel.Categories = await _context.Categories.Where(c => c.IsActive).ToListAsync();
 
             return View(viewModel);
-        }
-
-        // GET: Product/Details/5
+        }        // GET: Product/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,45 +72,27 @@ namespace ECommerceApp.Controllers
                 return NotFound();
             }
 
-            // TODO: Load product from database
-            // var product = await _context.Products
-            //     .Include(p => p.Category)
-            //     .FirstOrDefaultAsync(m => m.Id == id && m.IsActive);
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(m => m.Id == id && m.IsActive);
 
-            // if (product == null)
-            // {
-            //     return NotFound();
-            // }
+            if (product == null)
+            {
+                return NotFound();
+            }
 
-            // return View(product);
-            
-            return View();
-        }
+            return View(product);        }
 
         // GET: Product/Category/5
-        public async Task<IActionResult> Category(int id, int page = 1)
+        public IActionResult Category(int id, int page = 1)
         {
-            // TODO: Load products by category
             return RedirectToAction(nameof(Index), new { categoryId = id, page = page });
         }
 
         // GET: Product/Search
-        public async Task<IActionResult> Search(string term, int page = 1)
+        public IActionResult Search(string term, int page = 1)
         {
-            // TODO: Search products
             return RedirectToAction(nameof(Index), new { searchTerm = term, page = page });
-        }
-
-        private async Task<IEnumerable<Product>> GetFilteredProducts(int? categoryId, string searchTerm, int page, string sortBy, string sortOrder)
-        {
-            // TODO: Implement product filtering logic
-            return new List<Product>();
-        }
-
-        private int CalculateTotalPages(int? categoryId, string searchTerm, int pageSize)
-        {
-            // TODO: Calculate total pages based on filters
-            return 1;
         }
     }
 }

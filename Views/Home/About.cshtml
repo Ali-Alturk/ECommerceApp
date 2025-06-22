@@ -1,0 +1,154 @@
+@{
+    ViewData["Title"] = "About Us";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<!-- Page Header -->
+<section class="page-header bg-gradient">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="page-title">About E-Store</h1>
+                <p class="page-subtitle">Your trusted partner for quality products and exceptional service</p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">About</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="page-content">
+    <div class="container">
+        <!-- Our Story Section -->
+        <div class="content-section">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="image-wrapper">
+                        <img src="https://via.placeholder.com/600x400?text=Our+Store" class="img-fluid rounded-lg shadow-lg" alt="Our Store">
+                        <div class="image-overlay">
+                            <i class="fas fa-store fa-4x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="content-wrapper">
+                        <h2 class="section-title">Our Story</h2>
+                        <p class="section-text">
+                            Founded with a passion for bringing you the finest products at competitive prices, 
+                            E-Store has been serving customers worldwide since our inception. We believe that 
+                            shopping should be an enjoyable and seamless experience.
+                        </p>
+                        <p class="section-text">
+                            Our team is dedicated to sourcing high-quality products from trusted suppliers 
+                            and delivering them directly to your doorstep with care and efficiency.
+                        </p>
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <span class="stat-number">10K+</span>
+                                <span class="stat-label">Happy Customers</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">500+</span>
+                                <span class="stat-label">Products</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">24/7</span>
+                                <span class="stat-label">Support</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="content-section">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="section-title">Why Choose E-Store?</h2>
+                    <p class="section-subtitle">We're committed to providing the best shopping experience</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card-modern">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <h5 class="feature-title">Fast Delivery</h5>
+                        <p class="feature-description">Quick and reliable shipping to get your products to you as soon as possible.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card-modern">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h5 class="feature-title">Secure Shopping</h5>
+                        <p class="feature-description">Your personal information and payments are always protected with us.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card-modern">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h5 class="feature-title">24/7 Support</h5>
+                        <p class="feature-description">Our customer support team is always ready to help you with any questions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Values Section -->
+        <div class="content-section">
+            <div class="values-section">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h3 class="values-title">Our Values</h3>
+                        <div class="values-list">
+                            <div class="value-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>High-quality products from trusted brands</span>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Competitive pricing and regular promotions</span>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Easy returns and hassle-free exchanges</span>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Secure payment options and data protection</span>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Fast and reliable worldwide shipping</span>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Exceptional customer service experience</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="cta-wrapper">
+                            <h4>Ready to Start Shopping?</h4>
+                            <p>Join thousands of satisfied customers and discover our amazing products today.</p>
+                            <a asp-controller="Product" asp-action="Index" class="btn btn-primary-custom btn-lg">
+                                <i class="fas fa-shopping-bag me-2"></i>Shop Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

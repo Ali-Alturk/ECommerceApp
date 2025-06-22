@@ -20,9 +20,7 @@ namespace ECommerceApp.Controllers
             _context = context;
             _userManager = userManager;
             _logger = logger;
-        }
-
-        // GET: Cart
+        }        // GET: Cart
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
@@ -31,17 +29,19 @@ namespace ECommerceApp.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var viewModel = new CartViewModel();
-            // TODO: Load cart items from database
-            // viewModel.CartItems = await _context.CartItems
-            //     .Include(c => c.Product)
-            //     .Where(c => c.UserId == userId)
-            //     .ToListAsync();
+            var cartItems = await _context.CartItems
+                .Include(c => c.Product)
+                .ThenInclude(p => p.Category)
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
+
+            var viewModel = new CartViewModel
+            {
+                CartItems = cartItems
+            };
 
             return View(viewModel);
-        }
-
-        // POST: Cart/AddToCart
+        }        // POST: Cart/AddToCart
         [HttpPost]
         public async Task<IActionResult> AddToCart(int productId, int quantity = 1)
         {
@@ -53,12 +53,43 @@ namespace ECommerceApp.Controllers
 
             try
             {
-                // TODO: Implement add to cart logic
-                // 1. Check if product exists and is active
-                // 2. Check if item already in cart (update quantity) or add new item
-                // 3. Validate stock availability
-                // 4. Save changes to database
+                // Check if product exists and is active
+                var product = await _context.Products.FindAsync(productId);
+                if (product == null || !product.IsActive)
+                {
+                    return Json(new { success = false, message = "Product not found." });
+                }
 
+                // Check if item already in cart
+                var existingCartItem = await _context.CartItems
+                    .FirstOrDefaultAsync(c => c.UserId == userId && c.ProductId == productId);
+
+                if (existingCartItem != null)
+                {
+                    // Update existing quantity
+                    existingCartItem.Quantity += quantity;
+                    if (existingCartItem.Quantity > product.Stock)
+                    {
+                        return Json(new { success = false, message = "Insufficient stock available." });
+                    }
+                }
+                else
+                {
+                    // Add new item to cart
+                    if (quantity > product.Stock)
+                    {
+                        return Json(new { success = false, message = "Insufficient stock available." });
+                    }                    var cartItem = new CartItem
+                    {
+                        UserId = userId,
+                        ProductId = productId,
+                        Quantity = quantity,
+                        AddedDate = DateTime.Now
+                    };
+                    _context.CartItems.Add(cartItem);
+                }
+
+                await _context.SaveChangesAsync();
                 return Json(new { success = true, message = "Item added to cart successfully!" });
             }
             catch (Exception ex)
@@ -66,9 +97,7 @@ namespace ECommerceApp.Controllers
                 _logger.LogError(ex, "Error adding item to cart");
                 return Json(new { success = false, message = "An error occurred while adding item to cart." });
             }
-        }
-
-        // POST: Cart/UpdateQuantity
+        }        // POST: Cart/UpdateQuantity
         [HttpPost]
         public async Task<IActionResult> UpdateQuantity(int cartItemId, int quantity)
         {
@@ -80,12 +109,32 @@ namespace ECommerceApp.Controllers
 
             try
             {
-                // TODO: Implement update quantity logic
-                // 1. Find cart item by id and user
-                // 2. Validate new quantity
-                // 3. Update quantity or remove if quantity is 0
-                // 4. Save changes
+                // Find cart item by id and user
+                var cartItem = await _context.CartItems
+                    .Include(c => c.Product)
+                    .FirstOrDefaultAsync(c => c.Id == cartItemId && c.UserId == userId);
 
+                if (cartItem == null)
+                {
+                    return Json(new { success = false, message = "Cart item not found." });
+                }
+
+                if (quantity <= 0)
+                {
+                    // Remove item if quantity is 0 or negative
+                    _context.CartItems.Remove(cartItem);
+                }
+                else
+                {
+                    // Validate stock availability
+                    if (quantity > cartItem.Product.Stock)
+                    {
+                        return Json(new { success = false, message = "Insufficient stock available." });
+                    }
+                    cartItem.Quantity = quantity;
+                }
+
+                await _context.SaveChangesAsync();
                 return Json(new { success = true, message = "Cart updated successfully!" });
             }
             catch (Exception ex)
@@ -93,9 +142,7 @@ namespace ECommerceApp.Controllers
                 _logger.LogError(ex, "Error updating cart quantity");
                 return Json(new { success = false, message = "An error occurred while updating cart." });
             }
-        }
-
-        // POST: Cart/RemoveFromCart
+        }        // POST: Cart/RemoveFromCart
         [HttpPost]
         public async Task<IActionResult> RemoveFromCart(int cartItemId)
         {
@@ -107,10 +154,17 @@ namespace ECommerceApp.Controllers
 
             try
             {
-                // TODO: Implement remove from cart logic
-                // 1. Find cart item by id and user
-                // 2. Remove item from database
-                // 3. Save changes
+                // Find cart item by id and user
+                var cartItem = await _context.CartItems
+                    .FirstOrDefaultAsync(c => c.Id == cartItemId && c.UserId == userId);
+
+                if (cartItem == null)
+                {
+                    return Json(new { success = false, message = "Cart item not found." });
+                }
+
+                _context.CartItems.Remove(cartItem);
+                await _context.SaveChangesAsync();
 
                 return Json(new { success = true, message = "Item removed from cart!" });
             }
@@ -130,16 +184,12 @@ namespace ECommerceApp.Controllers
                 return Json(new { count = 0 });
             }
 
-            // TODO: Get cart item count from database
-            // var count = await _context.CartItems
-            //     .Where(c => c.UserId == userId)
-            //     .SumAsync(c => c.Quantity);
+            var count = await _context.CartItems
+                .Where(c => c.UserId == userId)
+                .SumAsync(c => c.Quantity);
 
-            var count = 0;
             return Json(new { count = count });
-        }
-
-        // POST: Cart/ClearCart
+        }        // POST: Cart/ClearCart
         [HttpPost]
         public async Task<IActionResult> ClearCart()
         {
@@ -151,9 +201,13 @@ namespace ECommerceApp.Controllers
 
             try
             {
-                // TODO: Implement clear cart logic
-                // 1. Remove all cart items for user
-                // 2. Save changes
+                // Remove all cart items for user
+                var cartItems = await _context.CartItems
+                    .Where(c => c.UserId == userId)
+                    .ToListAsync();
+
+                _context.CartItems.RemoveRange(cartItems);
+                await _context.SaveChangesAsync();
 
                 return Json(new { success = true, message = "Cart cleared successfully!" });
             }

@@ -1,0 +1,120 @@
+<footer class="footer-custom">
+    <div class="container">
+        <!-- Main Footer Content -->
+        <div class="row py-5">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="footer-brand">
+                    <h5 class="d-flex align-items-center mb-3">
+                        <i class="fas fa-store me-2"></i>E-Store
+                    </h5>
+                    <p class="footer-description">
+                        Your trusted online shopping destination. We provide high-quality products 
+                        with excellent customer service and fast delivery worldwide.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link me-3" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link me-3" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link me-3" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h6 class="footer-heading">Quick Links</h6>
+                <ul class="footer-links">
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-controller="Product" asp-action="Index">Products</a></li>
+                    <li><a asp-controller="Home" asp-action="About">About Us</a></li>
+                    <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h6 class="footer-heading">Categories</h6>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="searchCategory('Electronics')">Electronics</a></li>
+                    <li><a href="#" onclick="searchCategory('Clothing')">Clothing</a></li>
+                    <li><a href="#" onclick="searchCategory('Books')">Books</a></li>
+                    <li><a href="#" onclick="searchCategory('Home')">Home & Garden</a></li>
+                    <li><a href="#" onclick="searchCategory('Sports')">Sports</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h6 class="footer-heading">Support</h6>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Shipping Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">Track Order</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h6 class="footer-heading">Account</h6>
+                <ul class="footer-links">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li><a asp-area="User" asp-controller="Profile" asp-action="Index">My Profile</a></li>
+                        <li><a asp-area="User" asp-controller="Order" asp-action="Index">My Orders</a></li>
+                        <li><a asp-controller="Cart" asp-action="Index">Shopping Cart</a></li>
+                        <li><a href="#">Wishlist</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li><a asp-controller="Account" asp-action="Register">Register</a></li>
+                        <li><a href="#">Guest Checkout</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Newsletter Section -->
+        <div class="row py-4 border-top border-secondary">
+            <div class="col-lg-8 col-md-6 mb-3">
+                <h6 class="footer-heading">Stay Connected</h6>
+                <p class="mb-3">Subscribe to our newsletter for exclusive deals and updates.</p>
+                <div class="newsletter-form d-flex">
+                    <input type="email" class="form-control newsletter-input" placeholder="Enter your email address" aria-label="Email">
+                    <button class="btn btn-newsletter" type="button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3">
+                <h6 class="footer-heading">Contact Info</h6>
+                <div class="contact-info">
+                    <p class="mb-2"><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</p>
+                    <p class="mb-2"><i class="fas fa-envelope me-2"></i>support@e-store.com</p>
+                    <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>123 Store Street, City, State 12345</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Footer -->
+        <div class="row py-3 border-top border-secondary">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="copyright-text mb-0">
+                    &copy; @DateTime.Now.Year E-Store. All rights reserved.
+                </p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <div class="footer-bottom-links">
+                    <a href="#" class="me-3">Privacy Policy</a>
+                    <a href="#" class="me-3">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>    </div>
+</footer>
