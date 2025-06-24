@@ -1,3 +1,4 @@
+@model ECommerceApp.ViewModels.ContactViewModel
 @{
     ViewData["Title"] = "Contact Us";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
@@ -39,44 +40,43 @@
                     <div class="form-header">
                         <h3><i class="fas fa-envelope me-2"></i>Send us a Message</h3>
                         <p>Fill out the form below and we'll get back to you as soon as possible.</p>
-                    </div>
-                    
-                    <form asp-action="Contact" method="post" class="contact-form">
+                    </div>                      <form asp-action="Contact" method="post" class="contact-form">
                         @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name" class="form-label">Full Name *</label>
+                                    <label asp-for="Name" class="form-label"></label>
                                     <div class="input-wrapper">
                                         <i class="fas fa-user input-icon"></i>
-                                        <input type="text" class="form-control" id="name" name="name" required placeholder="Enter your full name">
+                                        <input asp-for="Name" class="form-control" placeholder="Enter your full name">
+                                        <span asp-validation-for="Name" class="text-danger"></span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="email" class="form-label">Email Address *</label>
+                            </div>                            <div class="col-md-6">                                <div class="form-group">
+                                    <label asp-for="Email" class="form-label"></label>
                                     <div class="input-wrapper">
                                         <i class="fas fa-envelope input-icon"></i>
-                                        <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email address">
+                                        <input asp-for="Email" class="form-control" placeholder="Enter your email address">
+                                        <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="subject" class="form-label">Subject</label>
+                          <div class="form-group">
+                            <label asp-for="Subject" class="form-label"></label>
                             <div class="input-wrapper">
                                 <i class="fas fa-tag input-icon"></i>
-                                <input type="text" class="form-control" id="subject" name="subject" placeholder="What is your message about?">
+                                <input asp-for="Subject" class="form-control" placeholder="What is your message about?">
+                                <span asp-validation-for="Subject" class="text-danger"></span>
                             </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="message" class="form-label">Message *</label>
+                          <div class="form-group">
+                            <label asp-for="Message" class="form-label"></label>
                             <div class="input-wrapper">
                                 <i class="fas fa-comment input-icon"></i>
-                                <textarea class="form-control" id="message" name="message" rows="6" required placeholder="Enter your message here..."></textarea>
+                                <textarea asp-for="Message" class="form-control" rows="6" placeholder="Enter your message here..."></textarea>
+                                <span asp-validation-for="Message" class="text-danger"></span>
                             </div>
                         </div>
                         
@@ -166,5 +166,6 @@
 </section>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script src="~/js/contact.js"></script>
 }

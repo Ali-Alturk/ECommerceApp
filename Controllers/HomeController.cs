@@ -36,30 +36,23 @@ namespace ECommerceApp.Controllers
         public IActionResult About()
         {
             return View();
+        }        public IActionResult Contact()
+        {
+            return View(new ContactViewModel());
         }
-
-        public IActionResult Contact()
+        
+        [HttpPost]
+        public IActionResult Contact(ContactViewModel model)
         {
-            return View();
-        }        [HttpPost]
-        public IActionResult Contact(string name, string email, string subject, string message)
-        {
-            if (ModelState.IsValid && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(message))
+            if (ModelState.IsValid)
             {
                 // TODO: Here you could send an email, save to database, etc.
                 // For now, we'll just show a success message
-                TempData["Message"] = $"Thank you {name}! Your message has been received. We will get back to you at {email} soon.";
+                TempData["Message"] = $"Thank you {model.Name}! Your message has been received. We will get back to you at {model.Email} soon.";
                 return RedirectToAction(nameof(Contact));
             }
             
-            if (string.IsNullOrEmpty(name))
-                ModelState.AddModelError("name", "Name is required");
-            if (string.IsNullOrEmpty(email))
-                ModelState.AddModelError("email", "Email is required");
-            if (string.IsNullOrEmpty(message))
-                ModelState.AddModelError("message", "Message is required");
-            
-            return View();
+            return View(model);
         }
 
         public IActionResult Privacy()
